@@ -23,167 +23,127 @@
 </head>
 
 <body translate="no" >
+  <!--
   <ol>
-  {% for case in mycases %}
+  {% for case in caselist %}
     <li>{{case}}</li>
   {% endfor %}
   </ol>
-  <h2 style="text-align: center;"><em>Raleigh NC City Permit Timeline for Property @ {{targetaddress}}</em></h2>
+  -->
+  <h1 style="text-align: center;color:white"><a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/search">Search Public Records - Raleigh Permit Portal</a></h1>
+  <h1 style="text-align: center;color:white"><em>Raleigh NC City Permit Timeline for Property @ <span style="color:#addfff">{{targetaddress}}</span></em></h1>
 <div class="container">
+  <div class="timeline-month" style="color:#addfff">Total Permit Activity<div>{{caselist|count}} Entries.</div>  <span>Time Span<div>{{monthYear|last}} to {{monthYear|first}}</div></span></div>
   <div class="timeline">
-    <div class="timeline-month">
+    {% for timelinemonth in monthYear %}
+    <div class="timeline-month" style="color:#addfff">
       {{timelinemonth}}
-      <span>27 Entries</span>
+      <span>
+        {% for item in caselist|groupby(attribute="1") %}
+          {% if item.grouper == timelinemonth %}
+          {{ item.list|count }} 
+          {% if item.list|count > 1 %}
+            Entries
+          {% else %}
+            Entry
+          {% endif %}
+          {% endif %}
+        {% endfor %}
+      </span>
     </div>
     <div class="timeline-section">
+    {% for item in caselist|groupby(attribute="1") %}
+      {% if item.grouper == timelinemonth %}
+      <!--
       <div class="timeline-date">
-        08/21/2022
+        {{item.grouper}}
       </div>
+      -->
       <div class="row">
+        {% for mini in item.list|reverse %}
         <div class="col-sm-4">
           <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa-solid fa-road text-info" aria-hidden="true"></i> Job Created
+            <div class="box-title" style="color:#addfff">
+              {% if mini[0].startswith('INSP') %}
+                <i class="fa-solid fa-search text-danger" aria-hidden="true"></i> Inspection
+              {% elif mini[0].startswith('ZE') %}
+                <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+              {% elif mini[0].startswith('PN') %}
+                <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+              {% elif mini[0].startswith('MASS') %}
+                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+              {% elif mini[0].startswith('SUR') %}
+                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+              {% elif mini[0].startswith('SUB') %}
+                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+              {% elif mini[0].startswith('FIL') %}
+                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+              {% elif mini[0].startswith('PR') %}
+                <i class="fa-solid fa-project-diagram text-info" aria-hidden="true"></i> Project
+              {% else %}
+                <i class="fa-solid fa-id-card text-success" aria-hidden="true"></i> Permit
+              {% endif %}
             </div>
             <div class="box-content">
-              <div class="box-item"><strong>Loss Type</strong>: A/C Leak</div>
-              <div class="box-item"><strong>Loss Territory</strong>: Texas</div>
-              <div class="box-item"><strong>Start Date</strong>: 08/22/2018</div>
+              {% if mini[0].startswith('INSP') %}
+                <div class="box-item"><strong>Inspection Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/inspectionDetail/inspection/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('ZE') %}
+                <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('PN') %}
+                <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('MASS') %}
+                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('SUR') %}
+                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('SUB') %}
+                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('FIL') %}
+                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% elif mini[0].startswith('PR') %}
+                <div class="box-item"><strong>Project Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/project/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% else %}
+                <div class="box-item"><strong>Permit Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/permit/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+              {% endif %}
+              <div class="box-item"><strong>Date</strong>: {{mini[2]}} </div>
+              <div class="box-item"><strong>Case Type</strong>: {{mini[4]}} </div>
+              <div class="box-item"><strong>Description</strong>: {{mini[6]}} </div>
             </div>
-            <div class="box-footer">- Tyler</div>
+            <div class="box-footer" 
+              {% if mini[5] == "Passed" %}
+                 style="background-color:green;color:white"
+              {% elif mini[5] == "Approved" %}
+                 style="background-color:green;color:white"
+              {% elif mini[5] == "Complete" %}
+                 style="background-color:blue;color:white"
+              {% elif mini[5] == "Issued" %}
+                 style="background-color:blue;color:white"
+              {% elif mini[5] == "In Application" %}
+                 style="background-color:orange;color:black"
+              {% elif mini[5] == "In Review" %}
+                 style="background-color:orange;color:black"
+              {% elif mini[5] == "Re-inspection Required" %}
+                 style="background-color:orange;color:black"
+              {% elif mini[5] == "Closed - Resolved" %}
+                 style="background-color:yellow;color:black"
+              {% elif mini[5] == "In Violation" %}
+                 style="background-color:red;color:black"
+              {% elif mini[5] == "Violation Corrected" %}
+                 style="background-color:green;color:white"
+              {% elif mini[5] == "Void" %}
+                 style="background-color:yellow;color:black"
+              {% elif mini[5] == "Withdrawn" %}
+                 style="background-color:yellow;color:black"
+              {% elif mini[5] == "Canceled" %}
+                 style="background-color:yellow;color:black"
+              {% endif %} ><strong>Case Status</strong>: {{mini[5]}}</div>
           </div>
         </div>
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-pencil text-info" aria-hidden="true"></i> Job Edited
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Project Manager</strong>: Marlyn</div>
-              <div class="box-item"><strong>Supervisor</strong>: Carol</div>
-            </div>
-            <div class="box-footer">- Tyler</div>
-          </div>
-        </div>
-
+        {% endfor %}
       </div>
-
+      {% endif %}
+   {% endfor %}
     </div>
-
-    <div class="timeline-section">
-      <div class="timeline-date">
-        22, Wednesday
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-pencil text-info" aria-hidden="true"></i> Job Edited
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Extraction Type</strong>: Carpet Heavy</div>
-              <div class="box-item"><strong>Water Category</strong>: 4</div>
-              <div class="box-item"><strong>No. Of Tech</strong>: 6</div>
-              <div class="box-item"><strong>Est. Complation</strong>: 09/01/2018</div>
-            </div>
-            <div class="box-footer">- Carol</div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-tasks text-primary" aria-hidden="true"></i> New Job To Do
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Employee</strong>: Sam</div>
-              <div class="box-item"><strong>To Do</strong>: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisi nulla, viverra quis felis sit amet, lacinia feugiat odio. Aliquam sed orci elementum, volutpat dolor eget, venenatis nunc</div>
-            </div>
-            <div class="box-footer">- Marlyn</div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-tasks text-primary" aria-hidden="true"></i> New Job To Do
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Employee</strong>: Jones</div>
-              <div class="box-item"><strong>To Do</strong>: Proin sit amet aliquet neque, eget sagittis nunc. Proin convallis lectus quis volutpat pharetra. Donec quis ultrices eros. Ut eget mi faucibus.</div>
-            </div>
-            <div class="box-footer">- Marlyn</div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-thermometer-half text-warning" aria-hidden="true"></i> Pschrometrics
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Temp.</strong>: 23 <sup>o</sup>C</div>
-              <div class="box-item"><strong>Rh </strong>: 42</div>
-              <div class="box-item"><strong>Comments</strong>: Integer nec placerat ipsum. Aliquam id ligula suscipit, ornare dui nec, laoreet tortor.</div>
-            </div>
-            <div class="box-footer">- Jones</div>
-          </div>
-        </div>
-        
-                <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-building-o text-default" aria-hidden="true"></i> Room Created
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Name</strong>: Kitchen</div>
-              <div class="box-item"><strong>Floor Level </strong>: 2</div>
-              <div class="box-item"><strong>Dimensions</strong>: 26 x 11 x 8</div>
-            </div>
-            <div class="box-footer">- Sam</div>
-          </div>
-        </div>
-        
-      </div>
-
-    </div>
-    
-    <div class="timeline-section">
-      <div class="timeline-date">
-        23, Thursday
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-tasks text-success" aria-hidden="true"></i> Job To Do Completed
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>Employee</strong>: Sam</div>
-              <div class="box-item"><strong>Employee Response</strong>: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisi nulla, viverra quis felis sit amet, lacinia feugiat odio. Aliquam sed orci elementum, volutpat dolor eget, venenatis nunc</div>
-            </div>
-            <div class="box-footer">- Carol</div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title">
-              <i class="fa fa-cogs text-info" aria-hidden="true"></i> Equipment Entry
-            </div>
-            <div class="box-content">
-              <div class="box-item"><strong>ID</strong>: TW-3232</div>
-              <div class="box-item"><strong>Name</strong>: HEPA 600</div>
-                            <div class="box-item"><strong>Date In</strong>: 08/22/2018</div>
-            </div>
-            <div class="box-footer">- Jones</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="timeline-month">
-      Sept, 2018
-      <span>3 Entries</span>
-    </div>
-
+   {% endfor %}
   </div>
 </div>
 </body>

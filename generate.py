@@ -1,12 +1,37 @@
 import datetime
 import jinja2
 import requests
+import sys
 from http.client import HTTPConnection #py3
 # print statements from `http.client.HTTPConnection` to console/stdout
 # HTTPConnection.debuglevel = 1
 
-timelinemonth = 'September 2020'
-targetaddress = '5005 Coronado Dr'
+print ('argument list', sys.argv)
+
+
+if len(sys.argv) == 1:
+    print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5005 Coronado Dr\"')
+    sys.exit()
+else:
+    targetaddress = sys.argv[1]
+    #targetaddress = '5005 Coronado Dr'
+
+def flatten(xs):
+    for x in xs:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            yield from flatten(x)
+        else:
+            yield x
+
+def makeReadableDates(list1):
+    readable_list = []
+    for x in list1:
+        readable_list.append(x.strftime("%B") + " " + x.strftime("%Y"))
+    return readable_list
+
+def uniqueYearMonth(l):
+    s = set(e[0] for e in l)
+    return sorted(list(s),reverse=True)
 
 # function to get unique values
 def unique(list1):
@@ -18,8 +43,12 @@ def unique(list1):
         if x not in unique_list:
             unique_list.append(x)
     # print list
-    for x in unique_list:
-        print(x,end=" ")
+    #for x in unique_list:
+        #list(filter(None, unique_list))
+        #print(x)
+    return x
+
+permit_detail_url = 'https://raleighnc-energovpub.tylerhost.net/apps/selfservice/api/energov/permits/permitdetail'
 
 url = 'https://raleighnc-energovpub.tylerhost.net/apps/selfservice/api/energov/search/search'
 headers = {'Content-type': 'application/json;charset=UTF-8',
@@ -29,7 +58,7 @@ headers = {'Content-type': 'application/json;charset=UTF-8',
            'Tyler-TenantUrl': 'RaleighNCProd',
            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'}
 myobj = '''{
-  "Keyword": "5005 Coronado Dr",
+  "Keyword": "''' + targetaddress + '''",
   "ExactMatch": true,
   "SearchModule": 1,
   "FilterModule": 1,
@@ -485,27 +514,45 @@ myobj = '''{
 
 mycases = []
 caseDates = []
+yearMonths = []
 permitScrape = requests.post(url, headers=headers, data = myobj)
 permitJSON = permitScrape.json()
 for cases in permitJSON["Result"]["EntityResults"]:
-  print(cases["CaseNumber"])
-  mycases.append(cases["CaseNumber"])
-  if (cases["ApplyDate"]) is None:
-    caseDates.append((datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%b") + " " + datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%Y"),"ScheduleDate"))
+  if (cases["ScheduleDate"]) is not None:
+    mycases.append([cases["CaseNumber"],datetime.datetime.strptime(cases["ScheduleDate"][:7], "%Y-%m").strftime("%B") + " " + datetime.datetime.strptime(cases["ScheduleDate"][:7], "%Y-%m").strftime("%Y"),datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]])
+    caseDates.append((datetime.datetime.strptime(cases["ScheduleDate"][:7], "%Y-%m"),"ScheduleDate"))
+    #caseDates.append((datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%b") + " " + datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%Y"),"ScheduleDate"))
     #print(datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%Y") + " - ScheduleDate")
+  elif (cases["ApplyDate"]) is not None:
+    mycases.append((cases["CaseNumber"],datetime.datetime.strptime(cases["ApplyDate"][:7], "%Y-%m").strftime("%B") + " " + datetime.datetime.strptime(cases["ApplyDate"][:7], "%Y-%m").strftime("%Y"),datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]))
+    caseDates.append((datetime.datetime.strptime(cases["ApplyDate"][:7], "%Y-%m"),"ApplyDate"))
+    #caseDates.append((datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%b") + " " + datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"),"ApplyDate"))
+    #print("foo: " + datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"))
   else:
-    caseDates.append((datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%b") + " " + datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"),"ApplyDate"))
-    #print(datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"))
+    mycases.append((cases["CaseNumber"],datetime.datetime.strptime("2000-01","%Y-%m").strftime("%B") + " " + datetime.datetime.strptime("2000-01", "%Y-%m").strftime("%Y"),datetime.datetime.strptime("2000-01-01", "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]))
+    caseDates.append((datetime.datetime.strptime("2000-01", "%Y-%m"),"DefaultDate"))
+    #caseDates.append((datetime.da
 
 #2022-04-09T21:53:56.512357Z
 #2020-07-28T15:27:51.6266667Z
-print(unique(caseDates))
+#print(caseDates)
+entries = []
+caselist = []
+monthYear = makeReadableDates(uniqueYearMonth(caseDates))
+for entry in monthYear:
+  entries.append(list(filter(lambda c: c[1]==entry, mycases)))
+#uniqueCouplets = unique(caseDates).sort(key = lambda x: x[0])
+#print(uniqueCouplets)
+#print(monthYear)
+for sublist in entries:
+  for myentry in sublist:
+    caselist.append(list(myentry))
 
+caselist = sorted(caselist, key = lambda x: datetime.datetime.strptime(x[2],'%m/%d/%Y'),reverse=True)
 outputfile = "test.html"
 subs = jinja2.Environment(
               loader=jinja2.FileSystemLoader('./')
-              ).get_template('template.html').render(timelinemonth=timelinemonth,targetaddress=targetaddress,mycases=mycases)
-
+              ).get_template('template.html').render(targetaddress=targetaddress,monthYear=monthYear,caselist=caselist)
 
 # lets write the substitution to a file
 with open(outputfile,'w') as f: f.write(subs)

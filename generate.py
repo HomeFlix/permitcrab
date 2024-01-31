@@ -23,7 +23,7 @@ print("")
 print("    Target Locked: " + sys.argv[1])
 
 if len(sys.argv) == 1:
-    print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5005 Coronado Dr\"')
+    print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5001 Coronado Dr\"')
     sys.exit()
 else:
     targetaddress = sys.argv[1]
@@ -543,23 +543,18 @@ for cases in permitJSON["Result"]["EntityResults"]:
   else:
     mycases.append((cases["CaseNumber"],datetime.datetime.strptime("2000-01","%Y-%m").strftime("%B") + " " + datetime.datetime.strptime("2000-01", "%Y-%m").strftime("%Y"),datetime.datetime.strptime("2000-01-01", "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]))
     caseDates.append((datetime.datetime.strptime("2000-01", "%Y-%m"),"DefaultDate"))
-    #caseDates.append((datetime.da
 
 #2022-04-09T21:53:56.512357Z
 #2020-07-28T15:27:51.6266667Z
-#print(caseDates)
 entries = []
 caselist = []
 monthYear = makeReadableDates(uniqueYearMonth(caseDates))
 for entry in monthYear:
   entries.append(list(filter(lambda c: c[1]==entry, mycases)))
-#uniqueCouplets = unique(caseDates).sort(key = lambda x: x[0])
-#print(uniqueCouplets)
-#print(monthYear)
+
 for sublist in entries:
   for myentry in sublist:
     caselist.append(list(myentry))
-
 caselist = sorted(caselist, key = lambda x: datetime.datetime.strptime(x[2],'%m/%d/%Y'),reverse=True)
 outputfile = targetaddress.replace(" ", "_") + ".html"
 subs = jinja2.Environment(

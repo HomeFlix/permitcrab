@@ -1,152 +1,145 @@
 <!DOCTYPE html>
 <html lang="en" >
-<head>
-<meta charset="UTF-8">
-<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
-<meta name="apple-mobile-web-app-title" content="CodePen">
-<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
-<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
-
-<title>PermitCrab - Raleigh Builder Permit Timeline Concept</title>
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/slate/bootstrap.min.css'>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css'>
-<link rel='stylesheet' href='./timeline.css'>
-  <script>
-  window.console = window.console || function(t) {};
-</script>
-
-<script>
-  if (document.location.search.match(/type=embed/gi)) {
-    window.parent.postMessage("resize", "*");
-  }
-</script>
-</head>
-
-<body translate="no" >
-  <!--
-  <ol>
-  {% for case in caselist %}
-    <li>{{case}}</li>
-  {% endfor %}
-  </ol>
-  -->
-  <h1 style="text-align: center;color:white"><a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/search">Search Public Records - Raleigh Permit Portal</a></h1>
-  <h1 style="text-align: center;color:white"><em>Raleigh NC City Permit Timeline for Property @ <span style="color:#addfff">{{targetaddress}}</span></em></h1>
-<div class="container">
-  <div class="timeline-month" style="color:#addfff">Total Permit Activity<div>{{caselist|count}} Entries.</div>  <span>Time Span<div>{{monthYear|last}} to {{monthYear|first}}</div></span></div>
-  <div class="timeline">
-    {% for timelinemonth in monthYear %}
-    <div class="timeline-month" style="color:#addfff">
-      {{timelinemonth}}
-      <span>
-        {% for item in caselist|groupby(attribute="1") %}
-          {% if item.grouper == timelinemonth %}
-          {{ item.list|count }} 
-          {% if item.list|count > 1 %}
-            Entries
-          {% else %}
-            Entry
-          {% endif %}
-          {% endif %}
-        {% endfor %}
-      </span>
-    </div>
-    <div class="timeline-section">
-    {% for item in caselist|groupby(attribute="1") %}
-      {% if item.grouper == timelinemonth %}
-      <!--
-      <div class="timeline-date">
-        {{item.grouper}}
-      </div>
-      -->
-      <div class="row">
-        {% for mini in item.list|reverse %}
-        <div class="col-sm-4">
-          <div class="timeline-box">
-            <div class="box-title" style="color:#addfff">
-              {% if mini[0].startswith('INSP') %}
-                <i class="fa-solid fa-search text-danger" aria-hidden="true"></i> Inspection
-              {% elif mini[0].startswith('ZE') %}
-                <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
-              {% elif mini[0].startswith('PN') %}
-                <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
-              {% elif mini[0].startswith('MASS') %}
-                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
-              {% elif mini[0].startswith('SUR') %}
-                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
-              {% elif mini[0].startswith('SUB') %}
-                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
-              {% elif mini[0].startswith('FIL') %}
-                <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
-              {% elif mini[0].startswith('PR') %}
-                <i class="fa-solid fa-project-diagram text-info" aria-hidden="true"></i> Project
-              {% else %}
-                <i class="fa-solid fa-id-card text-success" aria-hidden="true"></i> Permit
-              {% endif %}
+   <head>
+      <meta charset="UTF-8">
+      <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+      <meta name="apple-mobile-web-app-title" content="CodePen">
+      <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+      <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+      <title>PermitCrab - Raleigh Builder Permit Timeline Concept</title>
+      <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/slate/bootstrap.min.css'>
+      <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css'>
+      <link rel='stylesheet' href='./timeline.css'>
+      <script>
+         window.console = window.console || function(t) {};
+      </script>
+      <script>
+         if (document.location.search.match(/type=embed/gi)) {
+           window.parent.postMessage("resize", "*");
+         }
+      </script>
+   </head>
+   <body translate="no" >
+      <h1 style="text-align: center;color:white"><a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/search">Search Public Records - Raleigh Permit Portal</a></h1>
+      <h1 style="text-align: center;color:white"><em>Raleigh NC City Permit Timeline for Property @ <span style="color:#addfff">{{targetaddress}}</span></em></h1>
+      <div class="container">
+         <div class="timeline-month" style="color:#addfff">
+            Total Permit Activity
+            <div>{{caselist|count}} Entries.</div>
+            <span>
+               Time Span
+               <div>{{monthYear|last}} to {{monthYear|first}}</div>
+            </span>
+         </div>
+         <div class="timeline">
+            {% for timelinemonth in monthYear %}
+            <div class="timeline-month" style="color:#addfff">
+               {{timelinemonth}}
+               <span>
+               {% for item in caselist|groupby(attribute="1") %}
+               {% if item.grouper == timelinemonth %}
+               {{ item.list|count }} 
+               {% if item.list|count > 1 %}
+               Entries
+               {% else %}
+               Entry
+               {% endif %}
+               {% endif %}
+               {% endfor %}
+               </span>
             </div>
-            <div class="box-content">
-              {% if mini[0].startswith('INSP') %}
-                <div class="box-item"><strong>Inspection Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/inspectionDetail/inspection/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('ZE') %}
-                <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('PN') %}
-                <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('MASS') %}
-                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('SUR') %}
-                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('SUB') %}
-                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('FIL') %}
-                <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% elif mini[0].startswith('PR') %}
-                <div class="box-item"><strong>Project Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/project/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% else %}
-                <div class="box-item"><strong>Permit Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/permit/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
-              {% endif %}
-              <div class="box-item"><strong>Date</strong>: {{mini[2]}} </div>
-              <div class="box-item"><strong>Case Type</strong>: {{mini[4]}} </div>
-              <div class="box-item"><strong>Description</strong>: {{mini[6]}} </div>
+            <div class="timeline-section">
+               {% for item in caselist|groupby(attribute="1") %}
+               {% if item.grouper == timelinemonth %}
+               <div class="row">
+                  {% for mini in item.list|reverse %}
+                  <div class="col-sm-4">
+                     <div class="timeline-box">
+                        <div class="box-title" style="color:#addfff">
+                           {% if mini[0].startswith('INSP') %}
+                           <i class="fa-solid fa-search text-danger" aria-hidden="true"></i> Inspection
+                           {% elif mini[0].startswith('ZE') %}
+                           <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+                           {% elif mini[0].startswith('PN') %}
+                           <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+                           {% elif mini[0].startswith('MASS') %}
+                           <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+                           {% elif mini[0].startswith('SUR') %}
+                           <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+                           {% elif mini[0].startswith('SUB') %}
+                           <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+                           {% elif mini[0].startswith('FIL') %}
+                           <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
+                           {% elif mini[0].startswith('PR') %}
+                           <i class="fa-solid fa-project-diagram text-info" aria-hidden="true"></i> Project
+                           {% else %}
+                           <i class="fa-solid fa-id-card text-success" aria-hidden="true"></i> Permit
+                           {% endif %}
+                        </div>
+                        <div class="box-content">
+                           {% if mini[0].startswith('INSP') %}
+                           <div class="box-item"><strong>Inspection Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/inspectionDetail/inspection/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('ZE') %}
+                           <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('PN') %}
+                           <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('MASS') %}
+                           <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('SUR') %}
+                           <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('SUB') %}
+                           <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('FIL') %}
+                           <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('PR') %}
+                           <div class="box-item"><strong>Project Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/project/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% else %}
+                           <div class="box-item"><strong>Permit Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/permit/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% endif %}
+                           <div class="box-item"><strong>Date</strong>: {{mini[2]}} </div>
+                           <div class="box-item"><strong>Case Type</strong>: {{mini[4]}} </div>
+                           <div class="box-item"><strong>Description</strong>: {{mini[6]}} </div>
+                        </div>
+                        <div class="box-footer" 
+                        {% if mini[5] == "Passed" %}
+                        style="background-color:green;color:white"
+                        {% elif mini[5] == "Approved" %}
+                        style="background-color:green;color:white"
+                        {% elif mini[5] == "In Compliance" %}
+                        style="background-color:green;color:white"
+                        {% elif mini[5] == "Complete" %}
+                        style="background-color:blue;color:white"
+                        {% elif mini[5] == "Issued" %}
+                        style="background-color:blue;color:white"
+                        {% elif mini[5] == "In Application" %}
+                        style="background-color:orange;color:black"
+                        {% elif mini[5] == "In Review" %}
+                        style="background-color:orange;color:black"
+                        {% elif mini[5] == "Re-inspection Required" %}
+                        style="background-color:orange;color:black"
+                        {% elif mini[5] == "Closed - Resolved" %}
+                        style="background-color:yellow;color:black"
+                        {% elif mini[5] == "In Violation" %}
+                        style="background-color:red;color:black"
+                        {% elif mini[5] == "Violation Corrected" %}
+                        style="background-color:green;color:white"
+                        {% elif mini[5] == "Void" %}
+                        style="background-color:yellow;color:black"
+                        {% elif mini[5] == "Withdrawn" %}
+                        style="background-color:yellow;color:black"
+                        {% elif mini[5] == "Canceled" %}
+                        style="background-color:yellow;color:black"
+                        {% endif %} ><strong>Case Status</strong>: {{mini[5]}}
+                     </div>
+                  </div>
+               </div>
+               {% endfor %}
             </div>
-            <div class="box-footer" 
-              {% if mini[5] == "Passed" %}
-                 style="background-color:green;color:white"
-              {% elif mini[5] == "Approved" %}
-                 style="background-color:green;color:white"
-              {% elif mini[5] == "In Compliance" %}
-                 style="background-color:green;color:white"
-              {% elif mini[5] == "Complete" %}
-                 style="background-color:blue;color:white"
-              {% elif mini[5] == "Issued" %}
-                 style="background-color:blue;color:white"
-              {% elif mini[5] == "In Application" %}
-                 style="background-color:orange;color:black"
-              {% elif mini[5] == "In Review" %}
-                 style="background-color:orange;color:black"
-              {% elif mini[5] == "Re-inspection Required" %}
-                 style="background-color:orange;color:black"
-              {% elif mini[5] == "Closed - Resolved" %}
-                 style="background-color:yellow;color:black"
-              {% elif mini[5] == "In Violation" %}
-                 style="background-color:red;color:black"
-              {% elif mini[5] == "Violation Corrected" %}
-                 style="background-color:green;color:white"
-              {% elif mini[5] == "Void" %}
-                 style="background-color:yellow;color:black"
-              {% elif mini[5] == "Withdrawn" %}
-                 style="background-color:yellow;color:black"
-              {% elif mini[5] == "Canceled" %}
-                 style="background-color:yellow;color:black"
-              {% endif %} ><strong>Case Status</strong>: {{mini[5]}}</div>
-          </div>
-        </div>
-        {% endfor %}
+            {% endif %}
+            {% endfor %}
+         </div>
+         {% endfor %}
       </div>
-      {% endif %}
-   {% endfor %}
-    </div>
-   {% endfor %}
-  </div>
-</div>
-</body>
+      </div>
+   </body>
 </html>

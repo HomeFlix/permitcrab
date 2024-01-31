@@ -2,19 +2,31 @@ import datetime
 import jinja2
 import requests
 import sys
+from bs4 import BeautifulSoup
 from http.client import HTTPConnection #py3
 # print statements from `http.client.HTTPConnection` to console/stdout
 # HTTPConnection.debuglevel = 1
 
-print ('argument list', sys.argv)
-
+print("                   __       __    ")
+print("                  / <`     '> \   ")
+print("                 (  / @   @ \  )  ")
+print("                  \(_ _\_/_ _)/   ")
+print("                (\ `-/     \-' /) ")
+print("                 \"===\     /===\"")
+print("                  .==')___(`==.   ")
+print("                 ' .='     `=.    ")
+print("")
+print("    Welcome to Permit Crab .........")
+print("    Crawling Raleigh's Permit Portal")
+print("    So that you don't have to ......")
+print("")
+print("    Target Locked: " + sys.argv[1])
 
 if len(sys.argv) == 1:
     print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5005 Coronado Dr\"')
     sys.exit()
 else:
     targetaddress = sys.argv[1]
-    #targetaddress = '5005 Coronado Dr'
 
 def flatten(xs):
     for x in xs:
@@ -549,10 +561,12 @@ for sublist in entries:
     caselist.append(list(myentry))
 
 caselist = sorted(caselist, key = lambda x: datetime.datetime.strptime(x[2],'%m/%d/%Y'),reverse=True)
-outputfile = "test.html"
+outputfile = targetaddress.replace(" ", "_") + ".html"
 subs = jinja2.Environment(
               loader=jinja2.FileSystemLoader('./')
               ).get_template('template.html').render(targetaddress=targetaddress,monthYear=monthYear,caselist=caselist)
 
+tree = BeautifulSoup(subs,features="lxml")
+good_html = tree.prettify()
 # lets write the substitution to a file
-with open(outputfile,'w') as f: f.write(subs)
+with open(outputfile,'w') as f: f.write(good_html)

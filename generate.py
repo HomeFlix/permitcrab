@@ -7,6 +7,12 @@ from http.client import HTTPConnection #py3
 # print statements from `http.client.HTTPConnection` to console/stdout
 # HTTPConnection.debuglevel = 1
 
+if len(sys.argv) == 1:
+    print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5001 Coronado Dr\"')
+    sys.exit()
+else:
+    targetaddress = sys.argv[1]
+
 print("                   __       __    ")
 print("                  / <`     '> \   ")
 print("                 (  / @   @ \  )  ")
@@ -21,12 +27,6 @@ print("    Crawling Raleigh's Permit Portal")
 print("    So that you don't have to ......")
 print("")
 print("    Target Locked: " + sys.argv[1])
-
-if len(sys.argv) == 1:
-    print('Usage: python3 ' + sys.argv[0] + ' <Target Wake County Address with Street Number, Street Name and Abbreviated Descriptor> Example: python3 generate.py \"5001 Coronado Dr\"')
-    sys.exit()
-else:
-    targetaddress = sys.argv[1]
 
 def flatten(xs):
     for x in xs:
@@ -519,7 +519,7 @@ myobj = '''{
   ],
   "HiddenInspectionTypeIDs": null,
   "PageNumber": 1,
-  "PageSize": 100,
+  "PageSize": 2000,
   "SortBy": "relevance",
   "SortAscending": true
 }'''

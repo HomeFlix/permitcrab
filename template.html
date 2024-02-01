@@ -20,7 +20,7 @@
       </script>
    </head>
    <body translate="no" >
-      <h1 style="text-align: center;color:white"><a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/search">Search Public Records - Raleigh Permit Portal</a></h1>
+     <h1 style="text-align: center;color:white"><a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/search?m=1&fm=1&ps=10&pn=1&em=true&st={{targetaddress}}">Search Public Records - Raleigh Permit Portal</a></h1>
       <h1 style="text-align: center;color:white"><em>Raleigh NC City Permit Timeline for Property @ <span style="color:#addfff">{{targetaddress}}</span></em></h1>
       <div class="container">
          <div class="timeline-month" style="color:#addfff">
@@ -108,10 +108,14 @@
                         {% elif mini[5] == "In Compliance" %}
                         style="background-color:green;color:white"
                         {% elif mini[5] == "Complete" %}
-                        style="background-color:blue;color:white"
+                        style="background-color:green;color:white"
                         {% elif mini[5] == "Issued" %}
                         style="background-color:blue;color:white"
                         {% elif mini[5] == "In Application" %}
+                        style="background-color:blue;color:white"
+                        {% elif mini[5] == "Requested" %}
+                        style="background-color:orange;color:black"
+                        {% elif mini[5] == "Submitted - Online" %}
                         style="background-color:orange;color:black"
                         {% elif mini[5] == "In Review" %}
                         style="background-color:orange;color:black"
@@ -123,12 +127,14 @@
                         style="background-color:red;color:black"
                         {% elif mini[5] == "Violation Corrected" %}
                         style="background-color:green;color:white"
+                        {% elif mini[5] == "Partial Pass" %}
+                        style="background-color:yellow;color:black"
                         {% elif mini[5] == "Void" %}
                         style="background-color:yellow;color:black"
                         {% elif mini[5] == "Withdrawn" %}
                         style="background-color:yellow;color:black"
                         {% elif mini[5] == "Canceled" %}
-                        style="background-color:yellow;color:black"
+                        style="background-color:red;color:black"
                         {% endif %} ><strong>Case Status</strong>: {{mini[5]}}
                      </div>
                   </div>

@@ -529,6 +529,7 @@ caseDates = []
 yearMonths = []
 permitScrape = requests.post(url, headers=headers, data = myobj)
 permitJSON = permitScrape.json()
+# print(permitJSON)
 for cases in permitJSON["Result"]["EntityResults"]:
   if (cases["ScheduleDate"]) is not None:
     mycases.append([cases["CaseNumber"],datetime.datetime.strptime(cases["ScheduleDate"][:7], "%Y-%m").strftime("%B") + " " + datetime.datetime.strptime(cases["ScheduleDate"][:7], "%Y-%m").strftime("%Y"),datetime.datetime.strptime(cases["ScheduleDate"][:10], "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]])
@@ -540,6 +541,9 @@ for cases in permitJSON["Result"]["EntityResults"]:
     caseDates.append((datetime.datetime.strptime(cases["ApplyDate"][:7], "%Y-%m"),"ApplyDate"))
     #caseDates.append((datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%b") + " " + datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"),"ApplyDate"))
     #print("foo: " + datetime.datetime.strptime(cases["ApplyDate"][:10], "%Y-%m-%d").strftime("%Y"))
+  elif (cases["RequestDate"]) is not None:
+    mycases.append((cases["CaseNumber"],datetime.datetime.strptime(cases["RequestDate"][:7], "%Y-%m").strftime("%B") + " " + datetime.datetime.strptime(cases["RequestDate"][:7], "%Y-%m").strftime("%Y"),datetime.datetime.strptime(cases["RequestDate"][:10], "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]))
+    caseDates.append((datetime.datetime.strptime(cases["RequestDate"][:7], "%Y-%m"),"RequestDate"))
   else:
     mycases.append((cases["CaseNumber"],datetime.datetime.strptime("2000-01","%Y-%m").strftime("%B") + " " + datetime.datetime.strptime("2000-01", "%Y-%m").strftime("%Y"),datetime.datetime.strptime("2000-01-01", "%Y-%m-%d").strftime("%m/%d/%Y"),cases["CaseId"],cases["CaseType"],cases["CaseStatus"],cases["Description"]))
     caseDates.append((datetime.datetime.strptime("2000-01", "%Y-%m"),"DefaultDate"))

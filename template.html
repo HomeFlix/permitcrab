@@ -58,9 +58,15 @@
                         <div class="box-title" style="color:#addfff">
                            {% if mini[0].startswith('INSP') %}
                            <i class="fa-solid fa-search text-danger" aria-hidden="true"></i> Inspection
+                           {% elif mini[0].startswith('HS') %}
+                           <i class="fa-solid fa-question-circle-o text-warning" aria-hidden="true"></i> Request
                            {% elif mini[0].startswith('ZE') %}
                            <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
                            {% elif mini[0].startswith('PN') %}
+                           <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+                           {% elif mini[0].startswith('HC-PN') %}
+                           <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
+                           {% elif mini[0].startswith('UFH') %}
                            <i class="fa-solid fa-gavel text-warning" aria-hidden="true"></i> Code Case
                            {% elif mini[0].startswith('MASS') %}
                            <i class="fa-solid fa-clipboard text-info" aria-hidden="true"></i> Plan
@@ -79,9 +85,15 @@
                         <div class="box-content">
                            {% if mini[0].startswith('INSP') %}
                            <div class="box-item"><strong>Inspection Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/inspectionDetail/inspection/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('HS') %}
+                           <div class="box-item"><strong>Request Type</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/request/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('UFH') %}
+                           <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
                            {% elif mini[0].startswith('ZE') %}
                            <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
                            {% elif mini[0].startswith('PN') %}
+                           <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
+                           {% elif mini[0].startswith('HC-PN') %}
                            <div class="box-item"><strong>Code Case Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/code/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
                            {% elif mini[0].startswith('MASS') %}
                            <div class="box-item"><strong>Plan Number</strong>: <a href="https://raleighnc-energovpub.tylerhost.net/apps/selfservice#/plan/{{mini[3]}}" target="_blank" tabindex="0">{{mini[0]}}</a></div>
@@ -111,6 +123,10 @@
                         style="background-color:green;color:white"
                         {% elif mini[5] == "Issued" %}
                         style="background-color:blue;color:white"
+                        {% elif mini[5] == "Scheduled" %}
+                        style="background-color:blue;color:white"
+                        {% elif mini[5] == "In Progress" %}
+                        style="background-color:blue;color:white"
                         {% elif mini[5] == "In Application" %}
                         style="background-color:blue;color:white"
                         {% elif mini[5] == "Requested" %}
@@ -125,8 +141,14 @@
                         style="background-color:yellow;color:black"
                         {% elif mini[5] == "In Violation" %}
                         style="background-color:red;color:black"
+                        {% elif mini[5] == "In Violation*" %}
+                        style="background-color:red;color:black"
+                        {% elif mini[5] == "Escalated to Code Case" %}
+                        style="background-color:red;color:black"
                         {% elif mini[5] == "Violation Corrected" %}
-                        style="background-color:green;color:white"
+                        style="background-color:lightyellow;color:black"
+                        {% elif mini[5] == "Courtesy Inspection w/Follow Up" %}
+                        style="background-color:lightgreen;color:black"
                         {% elif mini[5] == "Partial Pass" %}
                         style="background-color:yellow;color:black"
                         {% elif mini[5] == "Void" %}
